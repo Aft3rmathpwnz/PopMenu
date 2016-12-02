@@ -60,6 +60,10 @@
         NSLog(@"%@",selectedItem.title);
     };
     
+    _popMenu.closedPopMenuBlock = ^() {
+        NSLog(@"menu was closed");
+    };
+    
     [_popMenu showMenuAtView:self.view];
     
 //    [_popMenu showMenuAtView:self.view startPoint:CGPointMake(CGRectGetWidth(self.view.bounds) - 60, CGRectGetHeight(self.view.bounds)) endPoint:CGPointMake(60, CGRectGetHeight(self.view.bounds))];

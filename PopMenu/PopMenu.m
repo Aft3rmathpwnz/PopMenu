@@ -74,6 +74,10 @@
                 weakSelf.didSelectedItemCompletion(weakSelf.selectedItem);
                 weakSelf.selectedItem = nil;
             }
+        } else if (finished) {
+            if (weakSelf.closedPopMenuBlock) {
+                weakSelf.closedPopMenuBlock();
+            }
         }
         [weakSelf removeFromSuperview];
     };

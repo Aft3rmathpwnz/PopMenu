@@ -23,6 +23,8 @@ typedef NS_ENUM(NSInteger, PopMenuAnimationType) {
  */
 typedef void(^DidSelectedItemBlock)(MenuItem *selectedItem);
 
+typedef void(^ClosedPopMenuBlock)();
+
 // ==========================================
 //  PopMenu 菜单栏
 // ==========================================
@@ -50,6 +52,8 @@ typedef void(^DidSelectedItemBlock)(MenuItem *selectedItem);
  *  点击菜单元素,Block会把点击的菜单元素当成参数返回给用户，用户可以拿到菜单元素对点击，做相应的操作
  */
 @property (nonatomic, copy) DidSelectedItemBlock didSelectedItemCompletion;
+
+@property (nonatomic, copy) ClosedPopMenuBlock closedPopMenuBlock;
 
 #pragma mark - init 初始化
 

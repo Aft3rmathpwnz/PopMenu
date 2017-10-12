@@ -273,6 +273,10 @@
             NSInteger firstIndex = foundMenuButton.tag - kMenuButtonBaseTag;
             NSInteger secondIndex = menuButton.tag - kMenuButtonBaseTag;
             
+            NSInteger menuButtonTag = menuButton.tag;
+            menuButton.tag = foundMenuButton.tag;
+            foundMenuButton.tag = menuButtonTag;
+            
             weakSelf.didExchangeItemsByIndecesCompletion(firstIndex, secondIndex);
         }
     } else {

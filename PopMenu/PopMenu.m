@@ -23,6 +23,8 @@
 
 @property (nonatomic, strong) XHRealTimeBlur *realTimeBlur;
 
+//@property (nonatomic, strong) UIScrollView *scrollView;
+
 @property (nonatomic, strong, readwrite) NSArray *items;
 
 @property (nonatomic, strong) MenuItem *selectedItem;
@@ -31,6 +33,8 @@
 
 @property (nonatomic, assign) CGPoint startPoint;
 @property (nonatomic, assign) CGPoint endPoint;
+
+@property (nonatomic, assign) BOOL wasDragged;
 
 @end
 
@@ -54,6 +58,9 @@
 - (void)setup {
     self.backgroundColor = [UIColor clearColor];
     self.perRowItemCount = 3;
+    
+    //_scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
+    //[self addSubview:_scrollView];
     
     typeof(self) __weak weakSelf = self;
     _realTimeBlur = [[XHRealTimeBlur alloc] initWithFrame:self.bounds];
@@ -132,11 +139,13 @@
     for (int index = 0; index < items.count; index ++) {
         
         MenuItem *menuItem = items[index];
+        
         // 如果没有自定义index，就按照正常流程，从0开始
         if (menuItem.index < 0) {
             menuItem.index = index;
         }
         MenuButton *menuButton = (MenuButton *)[self viewWithTag:kMenuButtonBaseTag + index];
+        
         
         CGRect toRect = [self getFrameWithItemCount:items.count
                                     perRowItemCount:perRowItemCount
@@ -164,11 +173,25 @@
         if (!menuButton) {
             menuButton = [[MenuButton alloc] initWithFrame:fromRect menuItem:menuItem];
             menuButton.tag = kMenuButtonBaseTag + index;
+            
+            // add pan listener
+            UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(wasDragged:)];
+            // cancel touches so that touchUpInside touches are ignored
+            panRecognizer.cancelsTouchesInView = YES;
+            [menuButton addGestureRecognizer:panRecognizer];
+            
+            
+            
             menuButton.didSelctedItemCompleted = ^(MenuItem *menuItem) {
                 weakSelf.selectedItem = menuItem;
                 [weakSelf dismissMenu];
             };
             [self addSubview:menuButton];
+            menuButton.initialFrame = toRect;
+            
+//            if(index == _items.count - 1) {
+//                [_scrollView setContentSize:CGSizeMake(self.bounds.size.width, CGRectGetMaxY(menuButton.frame) + 10.0)];
+//            }
         } else {
             menuButton.frame = fromRect;
         }
@@ -203,13 +226,83 @@
                 break;
         }
         double delayInSeconds = (items.count - index) * MenuButtonAnimationInterval;
-        
         [self initailzerAnimationWithToPostion:toRect formPostion:fromRect atView:menuButton beginTime:delayInSeconds];
     }
 }
 
 - (NSArray *)menuItems {
     return self.items;
+}
+
+#pragma mark - Menu button moving
+
+- (void)wasDragged:(UIPanGestureRecognizer *)recognizer {
+    
+    // Button that is dragging right now
+    MenuButton *button = (MenuButton *)recognizer.view;
+
+    // Make dragging button above the rest
+    if(recognizer.state == UIGestureRecognizerStateBegan) {
+        [self bringSubviewToFront:button];
+    }
+    
+    // Moving button according to panning gesture
+    CGPoint translation = [recognizer translationInView:button];
+    button.center = CGPointMake(button.center.x + translation.x, button.center.y + translation.y);
+    [recognizer setTranslation:CGPointZero inView:button];
+    
+    // If menu button got dropped
+    if(recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled || recognizer.state == UIGestureRecognizerStateRecognized) {
+        MenuButton *maxIntersectedButton = [self buttonWithMaximumIntersectionAreaWithDraggedButton:button];
+        [self tryToSwapButton:button withFoundButton:maxIntersectedButton animated:YES];
+    }
+}
+
+- (void)tryToSwapButton:(MenuButton *)menuButton withFoundButton:(MenuButton *)foundMenuButton animated:(BOOL)animated {
+    if(foundMenuButton) {
+        if(animated) {
+            [self initailzerAnimationWithToPostion:foundMenuButton.frame formPostion:menuButton.frame atView:menuButton beginTime:0.0];
+            [self initailzerAnimationWithToPostion:menuButton.initialFrame formPostion:foundMenuButton.frame atView:foundMenuButton beginTime:0.0];
+        }
+        CGRect initialFrame = menuButton.initialFrame;
+        menuButton.initialFrame = foundMenuButton.frame;
+        foundMenuButton.initialFrame = initialFrame;
+    } else {
+        [self initailzerAnimationWithToPostion:menuButton.initialFrame formPostion:menuButton.frame atView:menuButton beginTime:0.0];
+    }
+}
+
+- (MenuButton *)buttonWithMaximumIntersectionAreaWithDraggedButton:(MenuButton *)button {
+    
+    MenuButton *maxIntersectedButton = nil;
+    
+    // Iterate through every menu button on view, that is not given dragged button
+    for (int index = 0; index < _items.count; index ++) {
+        MenuItem *menuItem = _items[index];
+        if (menuItem.index < 0) {
+            menuItem.index = index;
+        }
+        
+        MenuButton *menuButton = (MenuButton *)[self viewWithTag:kMenuButtonBaseTag + index];
+        if(![menuButton isEqual:button]) {
+            // If given button intersects this menu button from loop
+            if(CGRectIntersectsRect(button.frame, menuButton.frame)) {
+                CGRect intersectionFrame = CGRectIntersection(button.frame, menuButton.frame);
+                // If there's no intersected button yet - assigning it;
+                // Otherwise, if current menu button intersection area is bigger than existing one - assigning it to button with max intersection.
+                if(!maxIntersectedButton) {
+                    maxIntersectedButton = menuButton;
+                } else {
+                    CGRect maxIntersectionFrame = CGRectIntersection(button.frame, maxIntersectedButton.frame);
+                    if(intersectionFrame.size.width * intersectionFrame.size.height > maxIntersectionFrame.size.width * maxIntersectionFrame.size.height) {
+                        maxIntersectedButton = menuButton;
+                    }
+                }
+            }
+        }
+    }
+    
+    return maxIntersectedButton;
 }
 
 /**

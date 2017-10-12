@@ -226,9 +226,11 @@
 				TargetAttributes = {
 					E4CEBE301A6BD1E50012B881 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = A7W9WBAQL6;
 					};
 					E4CEBE491A6BD1E50012B881 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = A7W9WBAQL6;
 						TestTargetID = E4CEBE301A6BD1E50012B881;
 					};
 				};
@@ -443,6 +445,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = A7W9WBAQL6;
 				INFOPLIST_FILE = PopMenuExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -456,6 +459,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = A7W9WBAQL6;
 				INFOPLIST_FILE = PopMenuExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -467,6 +471,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = A7W9WBAQL6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -486,6 +491,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = A7W9WBAQL6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",

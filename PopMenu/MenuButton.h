@@ -21,6 +21,7 @@ typedef void(^DidSelctedItemCompletedBlock)(MenuItem *menuItem);
  *  点击操作
  */
 @property (nonatomic, copy) DidSelctedItemCompletedBlock didSelctedItemCompleted;
+@property (nonatomic, assign) CGRect initialFrame;
 
 #pragma mark - init
 - (instancetype)initWithFrame:(CGRect)frame menuItem:(MenuItem *)menuItem;

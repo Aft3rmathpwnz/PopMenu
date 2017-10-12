@@ -54,6 +54,10 @@
     return self;
 }
 
+- (NSString *)description {
+    return [NSString stringWithFormat:@"%@; \n%@", [super description], _titleLabel.text];
+}
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     // 播放缩放动画
     POPSpringAnimation *scaleAnimation = [POPSpringAnimation animation];

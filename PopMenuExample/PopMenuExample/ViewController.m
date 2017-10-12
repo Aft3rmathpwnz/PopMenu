@@ -66,6 +66,10 @@
         NSLog(@"menu was closed");
     };
     
+    _popMenu.didExchangeItemsByIndecesCompletion = ^(NSInteger index1, NSInteger index2) {
+        NSLog(@"Changed items by indeces %ld and %ld", (long)index1, (long)index2);
+    };
+    
     [_popMenu showMenuAtView:self.view];
     
 //    [_popMenu showMenuAtView:self.view startPoint:CGPointMake(CGRectGetWidth(self.view.bounds) - 60, CGRectGetHeight(self.view.bounds)) endPoint:CGPointMake(60, CGRectGetHeight(self.view.bounds))];

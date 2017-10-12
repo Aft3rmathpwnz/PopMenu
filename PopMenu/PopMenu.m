@@ -267,6 +267,14 @@
         CGRect initialFrame = menuButton.initialFrame;
         menuButton.initialFrame = foundMenuButton.frame;
         foundMenuButton.initialFrame = initialFrame;
+        
+        typeof(self) __weak weakSelf = self;
+        if (weakSelf.didExchangeItemsByIndecesCompletion) {
+            NSInteger firstIndex = foundMenuButton.tag - kMenuButtonBaseTag;
+            NSInteger secondIndex = menuButton.tag - kMenuButtonBaseTag;
+            
+            weakSelf.didExchangeItemsByIndecesCompletion(firstIndex, secondIndex);
+        }
     } else {
         [self initailzerAnimationWithToPostion:menuButton.initialFrame formPostion:menuButton.frame atView:menuButton beginTime:0.0];
     }

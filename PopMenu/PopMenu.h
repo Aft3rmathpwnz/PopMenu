@@ -23,6 +23,8 @@ typedef NS_ENUM(NSInteger, PopMenuAnimationType) {
  */
 typedef void(^DidSelectedItemBlock)(MenuItem *selectedItem);
 
+typedef void(^DidExchangeItemsByIndecesBlock)(NSInteger firstIndex, NSInteger secondIndex);
+
 typedef void(^ClosedPopMenuBlock)();
 
 // ==========================================
@@ -54,6 +56,9 @@ typedef void(^ClosedPopMenuBlock)();
 @property (nonatomic, copy) DidSelectedItemBlock didSelectedItemCompletion;
 
 @property (nonatomic, copy) ClosedPopMenuBlock closedPopMenuBlock;
+
+@property (nonatomic, copy) DidExchangeItemsByIndecesBlock didExchangeItemsByIndecesCompletion;
+
 
 #pragma mark - init 初始化
 

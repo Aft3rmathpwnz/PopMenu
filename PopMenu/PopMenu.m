@@ -23,7 +23,7 @@
 
 @property (nonatomic, strong) XHRealTimeBlur *realTimeBlur;
 
-//@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) UIScrollView *scrollView;
 
 @property (nonatomic, strong, readwrite) NSArray *items;
 
@@ -59,8 +59,8 @@
     self.backgroundColor = [UIColor clearColor];
     self.perRowItemCount = 3;
     
-    //_scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
-    //[self addSubview:_scrollView];
+    _scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
+    [self addSubview:_scrollView];
     
     typeof(self) __weak weakSelf = self;
     _realTimeBlur = [[XHRealTimeBlur alloc] initWithFrame:self.bounds];
@@ -146,14 +146,14 @@
         }
         MenuButton *menuButton = (MenuButton *)[self viewWithTag:kMenuButtonBaseTag + index];
         
-        
+        NSInteger perColumnItemCount = items.count/perRowItemCount+(items.count%perRowItemCount>0?1:0);
         CGRect toRect = [self getFrameWithItemCount:items.count
                                     perRowItemCount:perRowItemCount
-                                  perColumItemCount:items.count/perRowItemCount+(items.count%perRowItemCount>0?1:0)
+                                  perColumItemCount:perColumnItemCount
                                           itemWidth:menuButtonWidth
                                          itemHeight:MenuButtonHeight
-                                           paddingX:MenuButtonVerticalPadding
-                                           paddingY:MenuButtonHorizontalMargin
+                                           paddingX:MenuButtonHorizontalMargin
+                                           paddingY:MenuButtonVerticalPadding
                                             atIndex:index
                                              onPage:0];
         
@@ -186,12 +186,12 @@
                 weakSelf.selectedItem = menuItem;
                 [weakSelf dismissMenu];
             };
-            [self addSubview:menuButton];
+            [self.scrollView addSubview:menuButton];
             menuButton.initialFrame = toRect;
             
-//            if(index == _items.count - 1) {
-//                [_scrollView setContentSize:CGSizeMake(self.bounds.size.width, CGRectGetMaxY(menuButton.frame) + 10.0)];
-//            }
+            if(index == _items.count - 1) {
+                [_scrollView setContentSize:CGSizeMake(self.bounds.size.width, perColumnItemCount * (MenuButtonHeight + MenuButtonVerticalPadding))];
+            }
         } else {
             menuButton.frame = fromRect;
         }
@@ -342,7 +342,13 @@
                          onPage:(NSInteger)page {
     
     NSUInteger rowCount = itemCount / perRowItemCount + (itemCount % perColumItemCount > 0 ? 1 : 0);
-    CGFloat insetY = (CGRectGetHeight(self.bounds) - (itemHeight + paddingY) * rowCount) / 2.0;
+    
+    CGFloat itemsOccupiedHeight = (itemHeight + paddingY) * rowCount;
+    CGFloat screenHeight = CGRectGetHeight(self.bounds);
+    BOOL itemsFitScreen = itemsOccupiedHeight <= screenHeight;
+    CGFloat insetY = 0;
+    if (itemsFitScreen)
+        insetY = (screenHeight - itemsOccupiedHeight) / 2.0;
     
     CGFloat originX = (index % perRowItemCount) * (itemWidth + paddingX) + paddingX + (page * CGRectGetWidth(self.bounds));
     CGFloat originY = ((index / perRowItemCount) - perColumItemCount * page) * (itemHeight + paddingY) + paddingY;

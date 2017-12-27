@@ -31,7 +31,7 @@
 - (void)showMenu {
     NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:3];
     
-    for(int i = 0; i < 2; i++) {
+    for(int i = 0; i < 3; i++) {
         MenuItem *menuItem = [MenuItem itemWithTitle:[NSString stringWithFormat:@"Flickr %d", i] iconName:@"post_type_bubble_flickr"];
         [items addObject:menuItem];
         

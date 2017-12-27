@@ -89,6 +89,12 @@
         [weakSelf removeFromSuperview];
     };
     _realTimeBlur.hasTapGestureEnable = YES;
+    [self setupTapGesture];
+}
+
+- (void)setupTapGesture {
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:_realTimeBlur action:@selector(disMiss)];
+    [self addGestureRecognizer:tapGestureRecognizer];
 }
 
 #pragma mark - 公开方法

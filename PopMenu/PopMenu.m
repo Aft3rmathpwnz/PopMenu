@@ -94,7 +94,8 @@
 
 - (void)setupTapGesture {
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:_realTimeBlur action:@selector(disMiss)];
-    [self addGestureRecognizer:tapGestureRecognizer];
+    tapGestureRecognizer.cancelsTouchesInView = NO;
+    [self.scrollView addGestureRecognizer:tapGestureRecognizer];
 }
 
 #pragma mark - 公开方法

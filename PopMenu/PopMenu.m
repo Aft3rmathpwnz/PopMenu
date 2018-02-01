@@ -43,6 +43,11 @@
 
 #pragma mark - Life Cycle
 
+- (instancetype)initWithFrame:(CGRect)frame items:(NSArray *)items shouldCloseOnTap:(BOOL)shouldCloseOnTap {
+    _shouldCloseOnTap = shouldCloseOnTap;
+    return [self initWithFrame:frame items:items];
+}
+
 - (id)initWithFrame:(CGRect)frame items:(NSArray *)items {
     self = [super initWithFrame:frame];
     if (self) {
@@ -88,8 +93,10 @@
         }
         [weakSelf removeFromSuperview];
     };
-    _realTimeBlur.hasTapGestureEnable = YES;
-    [self setupTapGesture];
+    if(_shouldCloseOnTap) {
+        _realTimeBlur.hasTapGestureEnable = YES;
+        [self setupTapGesture];
+    }
 }
 
 - (void)setupTapGesture {

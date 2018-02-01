@@ -52,7 +52,7 @@
     }
     
     if (!_popMenu) {
-        _popMenu = [[PopMenu alloc] initWithFrame:self.view.bounds items:items];
+        _popMenu = [[PopMenu alloc] initWithFrame:self.view.bounds items:items shouldCloseOnTap:YES];
         _popMenu.menuAnimationType = kPopMenuAnimationTypeNetEase;
     }
     if (_popMenu.isShowed) {

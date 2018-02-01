@@ -50,6 +50,9 @@ typedef void(^ClosedPopMenuBlock)();
 // 每行有多少列 Default is 3
 @property (nonatomic, assign) NSInteger perRowItemCount;
 
+// Determines should pop menu be closed on its background tap or not. Default value is NO. Can be modified only by class' constructor.
+@property (nonatomic, readonly) BOOL shouldCloseOnTap;
+
 /**
  *  点击菜单元素,Block会把点击的菜单元素当成参数返回给用户，用户可以拿到菜单元素对点击，做相应的操作
  */
@@ -61,6 +64,8 @@ typedef void(^ClosedPopMenuBlock)();
 
 
 #pragma mark - init 初始化
+
+- (instancetype)initWithFrame:(CGRect)frame items:(NSArray *)items shouldCloseOnTap:(BOOL)shouldCloseOnTap;
 
 - (instancetype)initWithFrame:(CGRect)frame items:(NSArray *)items;
 
